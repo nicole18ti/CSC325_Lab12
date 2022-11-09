@@ -147,12 +147,12 @@ public class AccessFBView {
 
     public boolean registerUser() {
         UserRecord.CreateRequest request = new UserRecord.CreateRequest()
-                .setEmail("user@example.com")
-                .setEmailVerified(false)
+                .setEmail("tiffantchan@example.com")
+                .setEmailVerified(true)
                 .setPassword("secretPassword")
                 .setPhoneNumber("+11234567890")
-                .setDisplayName("John Doe")
-                .setDisabled(false);
+                .setDisplayName("T Chan")
+                .setDisabled(true);
 
         UserRecord userRecord;
         try {
