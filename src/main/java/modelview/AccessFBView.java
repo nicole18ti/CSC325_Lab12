@@ -60,7 +60,6 @@ public class AccessFBView {
     @FXML
     private MenuItem registerField;
 
-   
     private boolean key;
     private ObservableList<Person> listOfUsers = FXCollections.observableArrayList();
     private Person person;
@@ -73,7 +72,7 @@ public class AccessFBView {
      *
      * function to clear the TextField after clicking
      */
-     @FXML
+    @FXML
     private void clearTextField(MouseEvent event) {
 
         // some if - else statements
@@ -90,10 +89,21 @@ public class AccessFBView {
         writeButton.disableProperty().bind(accessDataViewModel.isWritePossibleProperty().not());
     }
 
+    public void clearTextField() {
+        nameField.clear();
+        majorField.clear();
+        ageField.clear();
+    }
+
+    public void clearTextArea() {
+        outputField.clear();
+    }
+
     @FXML
     private void addRecord(ActionEvent event) {
         addData();
-        
+        clearTextField();
+
     }
 
     @FXML
@@ -125,7 +135,7 @@ public class AccessFBView {
 
     public boolean readFirebase() {
         key = false;
-
+        clearTextArea();
         //asynchronously retrieve all documents
         ApiFuture<QuerySnapshot> future = App.fstore.collection("References").get();
         // future.get() blocks on response
