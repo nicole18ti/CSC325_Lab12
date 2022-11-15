@@ -15,6 +15,7 @@ import com.mycompany.mvvmexample.FirestoreContext;
 import com.mycompany.mvvmexample.FirestoreContext;
 import com.mycompany.mvvmexample.FirestoreContext;
 import com.mycompany.mvvmexample.FirestoreContext;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -30,14 +31,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import models.Person;
 
 public class AccessFBView {
 
- 
-     @FXML
+    @FXML
     private TextField nameField;
     @FXML
     private TextField majorField;
@@ -49,11 +51,35 @@ public class AccessFBView {
     private Button readButton;
     @FXML
     private TextArea outputField;
-     private boolean key;
+    @FXML
+    private MenuBar menuField;
+    @FXML
+    private MenuItem readField;
+    @FXML
+    private MenuItem writeField;
+    @FXML
+    private MenuItem registerField;
+
+   
+    private boolean key;
     private ObservableList<Person> listOfUsers = FXCollections.observableArrayList();
     private Person person;
+
     public ObservableList<Person> getListOfUsers() {
         return listOfUsers;
+    }
+
+    /**
+     *
+     * function to clear the TextField after clicking
+     */
+     @FXML
+    private void clearTextField(MouseEvent event) {
+
+        // some if - else statements
+        nameField.clear();
+        majorField.clear();
+        ageField.clear();
     }
 
     void initialize() {
@@ -67,23 +93,24 @@ public class AccessFBView {
     @FXML
     private void addRecord(ActionEvent event) {
         addData();
+        
     }
 
-        @FXML
+    @FXML
     private void readRecord(ActionEvent event) {
         readFirebase();
     }
-    
-            @FXML
+
+    @FXML
     private void regRecord(ActionEvent event) {
         registerUser();
     }
-    
-     @FXML
+
+    @FXML
     private void switchToSecondary() throws IOException {
         App.setRoot("WebContainer.fxml");
     }
-    
+
     public void addData() {
 
         DocumentReference docRef = App.fstore.collection("References").document(UUID.randomUUID().toString());
@@ -95,48 +122,40 @@ public class AccessFBView {
         //asynchronously write data
         ApiFuture<WriteResult> result = docRef.set(data);
     }
-    
-        public boolean readFirebase()
-         {
-             key = false;
+
+    public boolean readFirebase() {
+        key = false;
 
         //asynchronously retrieve all documents
-        ApiFuture<QuerySnapshot> future =  App.fstore.collection("References").get();
+        ApiFuture<QuerySnapshot> future = App.fstore.collection("References").get();
         // future.get() blocks on response
         List<QueryDocumentSnapshot> documents;
-        try 
-        {
+        try {
             documents = future.get().getDocuments();
-            if(documents.size()>0)
-            {
+            if (documents.size() > 0) {
                 System.out.println("Outing....");
-                for (QueryDocumentSnapshot document : documents) 
-                {
-                    outputField.setText(outputField.getText()+ document.getData().get("Name")+ " , Major: "+
-                            document.getData().get("Major")+ " , Age: "+
-                            document.getData().get("Age")+ " \n ");
+                for (QueryDocumentSnapshot document : documents) {
+                    outputField.setText(outputField.getText() + document.getData().get("Name") + " , Major: "
+                            + document.getData().get("Major") + " , Age: "
+                            + document.getData().get("Age") + " \n ");
                     System.out.println(document.getId() + " => " + document.getData().get("Name"));
-                    person  = new Person(String.valueOf(document.getData().get("Name")), 
+                    person = new Person(String.valueOf(document.getData().get("Name")),
                             document.getData().get("Major").toString(),
                             Integer.parseInt(document.getData().get("Age").toString()));
                     listOfUsers.add(person);
                 }
+            } else {
+                System.out.println("No data");
             }
-            else
-            {
-               System.out.println("No data"); 
-            }
-            key=true;
-            
-        }
-        catch (InterruptedException | ExecutionException ex) 
-        {
-             ex.printStackTrace();
+            key = true;
+
+        } catch (InterruptedException | ExecutionException ex) {
+            ex.printStackTrace();
         }
         return key;
     }
-        
-        public void sendVerificationEmail() {
+
+    public void sendVerificationEmail() {
         try {
             UserRecord user = App.fauth.getUser("name");
             //String url = user.getPassword();
@@ -145,14 +164,21 @@ public class AccessFBView {
         }
     }
 
+    /**
+     *
+     * Fix the registration form - done
+     *
+     * Return: Successfully created new user: "UserId"
+     */
     public boolean registerUser() {
         UserRecord.CreateRequest request = new UserRecord.CreateRequest()
-                .setEmail("tiffantchan@example.com")
-                .setEmailVerified(true)
-                .setPassword("secretPassword")
-                .setPhoneNumber("+11234567890")
-                .setDisplayName("T Chan")
-                .setDisabled(true);
+                // .setEmail(nameField.getText().toString().trim()+"tiffantchan@example.com")
+                .setEmail(majorField.getText().toString().trim() + "@example.com")
+                .setEmailVerified(false)
+                //    .setPassword("secretPassword")
+                //  .setPhoneNumber("+11234567890")
+                .setDisplayName(nameField.getText().trim())
+                .setDisabled(false);
 
         UserRecord userRecord;
         try {
@@ -161,9 +187,9 @@ public class AccessFBView {
             return true;
 
         } catch (FirebaseAuthException ex) {
-           // Logger.getLogger(FirestoreContext.class.getName()).log(Level.SEVERE, null, ex);
+            // Logger.getLogger(FirestoreContext.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
-        
+
     }
 }
