@@ -1,5 +1,17 @@
 package com.mycompany.mvvmexample;
 
+/**
+ * Tiffany Chan
+ * CSC325
+ * Lab12 
+ * 
+ * 1. Fix the registration from - done
+ * 2. Create scenes for signing in and sign out - done
+ * 3. Allow the java user's name between the different scenes and ?
+ * 4. Add menu - done
+ * 5. improve style - done
+ */
+
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mycompany.mvvmexample.FirestoreContext;
@@ -24,7 +36,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         fstore = contxtFirebase.firebase();
         fauth = FirebaseAuth.getInstance();
-        scene = new Scene(loadFXML("AccessFBView.fxml"));
+        scene = new Scene(loadFXML("loginView.fxml"));
         primaryStage.setScene(scene);
         primaryStage.show();
 
