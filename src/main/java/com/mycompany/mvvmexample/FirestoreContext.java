@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author MoaathAlrajab
+ *
  */
 public class FirestoreContext {
 
