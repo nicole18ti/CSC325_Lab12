@@ -12,6 +12,7 @@ package com.mycompany.mvvmexample;
  * 5. improve style - done
  */
 
+
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mycompany.mvvmexample.FirestoreContext;
